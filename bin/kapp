@@ -1,0 +1,4 @@
+#!/bin/bash
+# kill all running shiny apps
+
+ps | awk '/launch.browser/{print $1}' | xargs kill

@@ -1,0 +1,5 @@
+#!/bin/bash
+# arguments: 1-Rmd file name
+
+Rscript -e "library(rmarkdown);rmarkdown::render(\"$PWD/$1\",\"html_document\")" 2>log.Rout
+

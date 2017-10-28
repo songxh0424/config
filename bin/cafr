@@ -1,0 +1,5 @@
+#!/bin/bash
+# run Rscript with caffeinate
+# arguments: 1-file to run
+
+caffeinate -i Rscript --no-save --no-restore $1 2>log.Rout

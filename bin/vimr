@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# if [[ $1 = "-n" ]]; then
+#   vim -s ~/.vim/bin/vimr.input $2
+# else
+#   tmux new-session -s -d r-devel 'vim -s ~/.vim/bin/vimr.input $1' 
+# fi
+
+# vim -s ~/.vim/bin/vimr.input $1
+# tmux select-pane -t 1
+# tmux split-window -v
+# tmux select-pane -t 0
+# vim $1
+
+tmux split-window -h
+tmux split-window -v
+tmux select-pane -t 1
+tmux send-keys -t 2 'R' Enter
+tmux select-pane -t 2
+tmux select-pane -t 1
+tmux attach-session -t 0
+vim $1

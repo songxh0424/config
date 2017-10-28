@@ -1,0 +1,4 @@
+#!/bin/bash
+# arguments: 1-app.R file
+
+nohup Rscript --no-save --no-restore -e "shiny::runApp(\"$PWD/$1\", launch.browser = TRUE)" 2>log.Rout &
