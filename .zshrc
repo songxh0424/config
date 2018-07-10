@@ -1,38 +1,36 @@
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=$ORACLE_HOME/bin:$PATH
-
-# vimr
-export PATH="$HOME/.vim/bin:$PATH"
-
-export PATH="$HOME/bin:$PATH"
-
-# added by Anaconda3 4.2.0 installer
-export PATH="/Users/Carl/anaconda/bin:$PATH"
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/Carl/.oh-my-zsh
-
-
-# Setting PATH for Python 3.4
-# The orginal version is saved in .bash_profile.pysave
-# PATH="/Library/Frameworks/Python.framework/Versions/3.4/bin:${PATH}"
-# export PATH
-
-# Added by Canopy installer on 2016-01-16
-# VIRTUAL_ENV_DISABLE_PROMPT can be set to '' to make the bash prompt show that Canopy is active, otherwise 1
-# alias activate_canopy="source '/Users/Carl/Library/Enthought/Canopy_64bit/User/bin/activate'"
-# VIRTUAL_ENV_DISABLE_PROMPT=1 source '/Users/Carl/Library/Enthought/Canopy_64bit/User/bin/activate'
-
-
-# added for sqlplus to fucking work
-export ORACLE_HOME=/Applications/oracle/product/instantclient_64/12.1
-export DYLD_LIBRARY_PATH=$ORACLE_HOME/lib
+export ZSH=/Users/shane/.oh-my-zsh
 
 # avoid perl warnings
 LC_CTYPE=en_US.UTF-8
 LANG=en_US.UTF-8
 LC_ALL=C
+
+# add custom bash scripts to PATH
+export PATH="/Users/shane/bin:$PATH"
+
+# added by Anaconda3 5.0.1 installer
+export PATH="/Users/shane/anaconda3/bin:$PATH"
+
+# use anaconda r in rstudio
+#export RSTUDIO_WHICH_R="/Users/shane/anaconda3/bin/R"
+export RSTUDIO_WHICH_R="/usr/local/bin/R"
+export RSTUDIO_PANDOC="/usr/local/Cellar/pandoc/2.0.2/bin/pandoc"
+launchctl setenv RSTUDIO_WHICH_R $RSTUDIO_WHICH_R
+
+# rJava package
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home/jre
+export R_JAVA_LD_LIBRARY_PATH=${JAVA_HOME}/lib/that/server
+
+# alias for julia
+alias julia=/Applications/JuliaPro-0.6.1.1.app/Contents/Resources/julia/Contents/Resources/julia/bin/julia
+
+# sqlplus
+export ORACLE_HOME=/Applications/oracle/product/instantclient_64/12.2.0.1.0
+export PATH=$ORACLE_HOME/bin:$PATH
+export DYLD_LIBRARY_PATH=$ORACLE_HOME/lib
 
 
 # Set name of the theme to load. Optionally, if you set this to "random"
@@ -84,7 +82,10 @@ ZSH_THEME="pygmalion"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(
+  git
+  osx
+)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -120,8 +121,6 @@ source $ZSH/oh-my-zsh.sh
 # Awesome-Terminal-Fonts
 #source ~/.fonts/*.sh
 #
-# syntax highlighting
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # powerlevel9k settings
 # #POWERLEVEL9K_MODE='awesome-patched'
@@ -160,3 +159,6 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='yellow'
 # POWERLEVEL9K_STATUS_OK_BACKGROUND="white"
 # POWERLEVEL9K_STATUS_OK_FOREGROUND="green"
+
+# syntax highlighting
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

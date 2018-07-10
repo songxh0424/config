@@ -30,11 +30,10 @@ values."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
+   '(rust
      javascript
-     rust
+     osx
      html
-     csv
      sql
      python
      ;; ----------------------------------------------------------------
@@ -44,22 +43,28 @@ values."
      ;; ----------------------------------------------------------------
      helm
      (auto-completion :variables
-                      auto-completion-enable-snippets-in-popup t
+                      auto-completion-enable-snippets-in-popup nil
                       auto-completion-enable-help-tooltip t)
      ;; better-defaults
      emacs-lisp
      git
      markdown
-     ;; org
+     pandoc
+     (org :variables
+          org-startup-truncated nil
+          org-startup-folded nil
+          org-enable-github-support t
+          org-projectile-file "TODOs.org")
      (shell :variables
             shell-default-shell 'ansi-term
             shell-default-term-shell "/bin/zsh"
             shell-default-height 30
             shell-default-position 'bottom)
      ;; spell-checking
-     syntax-checking
+     ;; syntax-checking
      (ess :variables
-          ess-enable-smart-equals nil
+          ;; ess-enable-smart-equals nil
+          ;; ess-eval-visibly nil
           ess-use-auto-complete nil
           ess-complete-object-name t
           ess-complete-filename t
@@ -68,13 +73,15 @@ values."
      evil-cleverparens
      (evil-snipe :variables
                  evil-snipe-enable-alternate-f-and-t-behaviors t
-                 ;; evil-snipe-mode 1
-                 ;; evil-snipe-override-mode 1
                  )
      (colors :variables
              colors-colorize-identifiers 'variables
              colors-enable-nyan-cat-progress-bar t)
+     ipython-notebook
      ;; version-control
+     ;; xkcd
+     spotify
+     ;; selectric
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -152,8 +159,13 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(misterioso
-                         spacemacs-dark
+   dotspacemacs-themes '(
+                         sanityinc-solarized-dark
+                         farmhouse-dark
+                         ;; leuven
+                         ;; material
+                         ;; gruvbox
+                         ;; spacemacs-dark
                          ;; mysterioso
                          ;; spacemacs-light
                          ;; inkpot
@@ -162,7 +174,7 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro"
+   dotspacemacs-default-font '("Source Code Pro for Powerline"
                                :size 13
                                :weight normal
                                :width normal
@@ -336,7 +348,7 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  (setenv "WORKON_HOME" "~/anaconda/envs")
+  (setenv "WORKON_HOME" "~/anaconda3/envs")
   ;; (define-key evil-normal-state-map "s" nil)
   ;; (evil-define-key '(normal motion) evil-snipe-mode-map
   ;;   "s" 'evil-snipe-s
@@ -350,8 +362,13 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  ;; (setq powerline-default-separator 'nil)
-  (setq powerline-default-separator 'utf-8)
+  (with-eval-after-load 'org
+    ;; here goes your Org config :)
+    (add-hook 'org-mode-hook
+              (lambda () (org-bullets-mode t)))
+    )
+  (setq powerline-default-separator 'nil)
+  ;; (setq powerline-default-separator 'utf-8)
   ;; (setq powerline-default-separator 'wave) ;; other options include arrow, slant
   ;; (setq ns-use-srgb-colorspace nil)
   (spaceline-compile)
@@ -369,8 +386,8 @@ you should place your code here."
   ;; (ac-config-default)
   ;; (setq ess-use-auto-complete t)
   (setq ac-delay 0.01)       
-  (setq ac-auto-show-menu 0.02)
-  (setq ac-quick-help-delay 0.1)
+  (setq ac-auto-show-menu 0.05)
+  (setq ac-quick-help-delay 1.0)
   (setq ac-quick-help-height 10)
   (setq ac-candidate-limit 100)
   ;; end autocomplete
@@ -390,6 +407,10 @@ you should place your code here."
   ;; (spacemacs/toggle-evil-cleverparens-on)
   ;; (add-hook 'clojure-mode-hook #'evil-cleverparens-mode)
   (add-hook 'prog-mode-hook 'rainbow-mode) ;; enable rainbow mode by default
+  ;; (add-hook 'ess-mode-hook 'rainbow-identifiers-mode) 
+  (add-hook 'ess-mode-hook 'rainbow-delimiters-mode) 
+  (evil-define-key 'visual evil-snipe-mode-map "z" 'evil-snipe-s)
+  (evil-define-key 'visual evil-snipe-mode-map "Z" 'evil-snipe-S)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -401,6 +422,19 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
    ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
+ '(ess-R-font-lock-keywords
+   (quote
+    ((ess-R-fl-keyword:modifiers . t)
+     (ess-R-fl-keyword:fun-defs . t)
+     (ess-R-fl-keyword:keywords . t)
+     (ess-R-fl-keyword:assign-ops . t)
+     (ess-R-fl-keyword:constants . t)
+     (ess-fl-keyword:fun-calls . t)
+     (ess-fl-keyword:numbers . t)
+     (ess-fl-keyword:operators . t)
+     (ess-fl-keyword:delimiters)
+     (ess-fl-keyword:= . t)
+     (ess-R-fl-keyword:F&T . t))))
  '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
@@ -424,11 +458,32 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
    ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
+ '(ess-R-font-lock-keywords
+   (quote
+    ((ess-R-fl-keyword:modifiers . t)
+     (ess-R-fl-keyword:fun-defs . t)
+     (ess-R-fl-keyword:keywords . t)
+     (ess-R-fl-keyword:assign-ops . t)
+     (ess-R-fl-keyword:constants . t)
+     (ess-fl-keyword:fun-calls . t)
+     (ess-fl-keyword:numbers . t)
+     (ess-fl-keyword:operators . t)
+     (ess-fl-keyword:delimiters)
+     (ess-fl-keyword:= . t)
+     (ess-R-fl-keyword:F&T . t))))
  '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
-    (symon string-inflection password-generator impatient-mode helm-purpose window-purpose imenu-list evil-lion editorconfig company-anaconda evil-cleverparens paredit company-quickhelp ox-gfm org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download htmlize gnuplot evil-snipe mysterioso-theme web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern tern coffee-mode toml-mode racer flycheck-rust cargo rust-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data rainbow-mode rainbow-identifiers color-identifiers-mode csv-mode sql-indent yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode anaconda-mode pythonic evil-commentary polymode mmm-mode markdown-toc markdown-mode gh-md smeargle orgit magit-gitflow helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor ess-smart-equals ess-R-data-view ctable ess julia-mode company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
- '(tramp-syntax (quote default) nil (tramp)))
+    (color-theme-sanityinc-solarized company-anaconda evil-cleverparens paredit company-quickhelp ox-gfm org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download htmlize gnuplot evil-snipe mysterioso-theme web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern tern coffee-mode toml-mode racer flycheck-rust cargo rust-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data rainbow-mode rainbow-identifiers color-identifiers-mode csv-mode sql-indent yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode anaconda-mode pythonic evil-commentary polymode mmm-mode markdown-toc markdown-mode gh-md smeargle orgit magit-gitflow helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor ess-smart-equals ess-R-data-view ctable ess julia-mode company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+ '(tramp-syntax (quote default))
+ '(when
+      (or
+       (not
+        (boundp
+         (quote ansi-term-color-vector)))
+       (not
+        (facep
+         (aref ansi-term-color-vector 0))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
